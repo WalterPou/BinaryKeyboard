@@ -133,7 +133,7 @@ def binary_to_ascii(binary_str):
     ascii_string = byte_data.decode('ascii')
     
     return ascii_string
-
+()
 def press_key(key):
     """Handle key presses, including special characters like !."""
     if key == '!':
@@ -229,6 +229,7 @@ def fast_press(key):
     user32.keybd_event(vk_code,0,2,0)
 
 space=False
+state=False
 
 while True:
     while len(char)<bits:  # Collect 8 bits to form one character
@@ -245,7 +246,11 @@ while True:
             time.sleep(0.1)  # Small delay to avoid reading too fast
         if pin_8.read() == 1:
             print('Backspace')
-            fast_press('Right')
+            if len(char)!=0:
+                state=False
+                if state==False:
+                    fast_press('Right')
+                    state=True
             fast_press('Backspace')
             char=[]
             time.sleep(0.1)
@@ -260,7 +265,7 @@ while True:
             #winsound.Beep(1000,150)
             char.append('1')
             time.sleep(0.1)  # Small delay to avoid reading too fast
-
+            
     # Once 8 bits are collected, convert binary to ASCII
     binary_string = ''.join(char)  # Join the list to form a binary string
     try:
@@ -272,7 +277,8 @@ while True:
                 fast_press('Backspace')
                 print(i)
             #pyd.press('backspace',8)
-            press_key(ascii_string)  # Use the new function to handle key presses
+            fast_press(ascii_string)  # Use the new function to handle key presses
+            state=False
             winsound.Beep(2000,150)
         else:
             fast_press('Right')
