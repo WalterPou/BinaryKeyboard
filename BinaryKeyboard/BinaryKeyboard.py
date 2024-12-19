@@ -124,7 +124,6 @@ def binary_to_ascii(binary_str):
         fast_press('Right')
         for i in range(bits+2):
             fast_press('Backspace')
-            print(i)
         winsound.Beep(2000,150)
         raise ValueError("Binary string length must be a multiple of 8.")
     
@@ -265,7 +264,7 @@ while True:
             #winsound.Beep(1000,150)
             char.append('1')
             time.sleep(0.1)  # Small delay to avoid reading too fast
-            
+
     # Once 8 bits are collected, convert binary to ASCII
     binary_string = ''.join(char)  # Join the list to form a binary string
     try:
@@ -275,7 +274,6 @@ while True:
             fast_press('Right')
             for i in range(bits+2):
                 fast_press('Backspace')
-                print(i)
             #pyd.press('backspace',8)
             fast_press(ascii_string)  # Use the new function to handle key presses
             state=False
@@ -291,7 +289,6 @@ while True:
         fast_press('Right')
         for i in range(bits+2):
             fast_press('Backspace')
-            print(i)
         winsound.Beep(2000,150)
         print(f"Error: {e}")
     
