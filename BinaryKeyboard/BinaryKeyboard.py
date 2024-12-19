@@ -275,7 +275,7 @@ while True:
             for i in range(bits+2):
                 fast_press('Backspace')
             #pyd.press('backspace',8)
-            fast_press(ascii_string)  # Use the new function to handle key presses
+            press_key(ascii_string)  # Use the new function to handle key presses
             state=False
             winsound.Beep(2000,150)
         else:
