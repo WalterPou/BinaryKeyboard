@@ -1,7 +1,7 @@
 import pyfirmata as pyf
 import time
 import pydirectinput as pyd
-import winsound
+#import winsound
 import ctypes
 from ctypes import windll
 
@@ -124,7 +124,7 @@ def binary_to_ascii(binary_str):
         fast_press('Right')
         for i in range(bits+2):
             fast_press('Backspace')
-        winsound.Beep(2000,150)
+        #winsound.Beep(2000,150)
         raise ValueError("Binary string length must be a multiple of 8.")
     
     # Convert binary to integer, then to bytes, and decode to ASCII
@@ -250,6 +250,10 @@ while True:
                 if state==False:
                     fast_press('Right')
                     state=True
+            if len(char)>0:
+                fast_press('Right')
+                for i in range(len(char)+2):
+                    fast_press('Backspace')
             fast_press('Backspace')
             char=[]
             time.sleep(0.1)
@@ -277,7 +281,7 @@ while True:
             #pyd.press('backspace',8)
             press_key(ascii_string)  # Use the new function to handle key presses
             state=False
-            winsound.Beep(2000,150)
+            #winsound.Beep(2000,150)
         else:
             fast_press('Right')
             for i in range(bits+2):
@@ -289,7 +293,7 @@ while True:
         fast_press('Right')
         for i in range(bits+2):
             fast_press('Backspace')
-        winsound.Beep(2000,150)
+        #winsound.Beep(2000,150)
         print(f"Error: {e}")
     
     # Clear the list for the next input
