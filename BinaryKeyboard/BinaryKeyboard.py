@@ -252,7 +252,7 @@ while True:
                     state=True
             if len(char)>0:
                 fast_press('Right')
-                for i in range(len(char)+2):
+                for i in range(len(char)+1):
                     fast_press('Backspace')
             fast_press('Backspace')
             char=[]
@@ -270,11 +270,23 @@ while True:
             time.sleep(0.1)  # Small delay to avoid reading too fast
 
     # Once 8 bits are collected, convert binary to ASCII
-    binary_string = ''.join(char)  # Join the list to form a binary string
+    binary_string = ''.join(char)  # Join the list to form a binary string[1]
     try:
         ascii_string = binary_to_ascii(binary_string)  # Convert to ASCII
         print(f"ASCII: {ascii_string}")  # Optional: Print the ASCII output for debugging
-        if binary_string!="00001010":
+        if binary_string=="00001010":
+            fast_press('Right')
+            for i in range(bits+2):
+                fast_press('Backspace')
+            #pyd.press('backspace',8)
+            #time.sleep(.2)
+            pyd.press('enter')
+        elif binary_string=="00001001":
+            fast_press('Right')
+            for i in range(bits+2):
+                fast_press('Backspace')
+            fast_press('Tab')
+        else:
             fast_press('Right')
             for i in range(bits+2):
                 fast_press('Backspace')
@@ -282,13 +294,6 @@ while True:
             press_key(ascii_string)  # Use the new function to handle key presses
             state=False
             #winsound.Beep(2000,150)
-        else:
-            fast_press('Right')
-            for i in range(bits+2):
-                fast_press('Backspace')
-            #pyd.press('backspace',8)
-            #time.sleep(.2)
-            pyd.press('enter')
     except ValueError as e:
         fast_press('Right')
         for i in range(bits+2):
