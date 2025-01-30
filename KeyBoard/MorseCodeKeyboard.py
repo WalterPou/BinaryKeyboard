@@ -12,18 +12,6 @@ it.start()
 
 button = board.get_pin(f'd:{PIN}:i')  # Digital input
 
-# Morse Code Dictionary
-MORSE_DICT = {
-    '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E',
-    '..-.': 'F', '--.': 'G', '....': 'H', '..': 'I', '.---': 'J',
-    '-.-': 'K', '.-..': 'L', '--': 'M', '-.': 'N', '---': 'O',
-    '.--.': 'P', '--.-': 'Q', '.-.': 'R', '...': 'S', '-': 'T',
-    '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X', '-.--': 'Y',
-    '--..': 'Z', '-----': '0', '.----': '1', '..---': '2', '...--': '3',
-    '....-': '4', '.....': '5', '-....': '6', '--...': '7', '---..': '8',
-    '----.': '9', '/': ' '  # Space separator
-}
-
 controller=pyk.Controller()
 
 # Timing Variables
@@ -46,17 +34,17 @@ def translate_morse(morse_sequence):
         '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X', '-.--': 'Y',
         '--..': 'Z', '-----': '0', '.----': '1', '..---': '2', '...--': '3',
         '....-': '4', '.....': '5', '-....': '6', '--...': '7', '---..': '8',
-        '----.': '9', '/': ' ', '.-.-': " "
+        '----.': '9', '/': ' ', '.-.-': " ", '----': 'backspace'
     }
     return MORSE_DICT.get(morse_sequence, '?')
 
 print("Waiting for input.")
 while True:
+    time.sleep(0.01)
     try:
         state = button.read()
 
         if state:  # Button Pressed
-            print("Entering Code..")
             start_time = time.time()
 
             while button.read():  # Wait until button is released
@@ -68,12 +56,12 @@ while True:
                 current_symbol += "."
                 controller.type('.')
                 #print("Detected: DOT (.)")
-                time.sleep(0.1)
+                time.sleep(0.01)
             elif press_duration < DASH_TIME:
                 current_symbol += "-"
                 controller.type('-')
                 #print("Detected: DASH (-)")
-                time.sleep(0.1)
+                time.sleep(0.01)
             else:
                 print("Ignored: Press too long!")
 
@@ -90,8 +78,12 @@ while True:
                         controller.release(pyk.Key.backspace)
                     current_symbol = ""
                 #print("Current Translation:", translated_text)
-                controller.type(translated_text)
-                last_press_time = None
+                    if translated_text=='backspace':
+                        controller.press(pyk.Key.backspace)
+                        controller.release(pyk.Key.backspace)
+                    else:
+                        controller.type(translated_text)
+                        last_press_time = None
 
     except KeyboardInterrupt:
         print("\nExiting...")
