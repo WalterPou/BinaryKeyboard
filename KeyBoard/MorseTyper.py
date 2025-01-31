@@ -15,12 +15,13 @@ button = board.get_pin(f'd:{PIN}:i')  # Digital input
 controller=pyk.Controller()
 
 # Timing Variables
-DOT_TIME = 0.25
+DOT_TIME = 0.3
 DASH_TIME = 1.5
 LETTER_GAP = 0.5
 WORD_GAP = 1.5
 
 current_symbol = ""
+symbols=""
 translated_text = ""
 last_press_time = None
 
@@ -55,11 +56,13 @@ while True:
 
             if press_duration < DOT_TIME:
                 current_symbol+='.'
+                symbols+='.'
                 controller.type('.')
                 #print("Detected: DOT (.)")
                 time.sleep(0.01)
             elif press_duration < DASH_TIME:
                 current_symbol+='-'
+                symbols+='-'
                 controller.type('-')
                 #print("Detected: DASH (-)")
                 time.sleep(0.01)
@@ -72,25 +75,40 @@ while True:
             wait_time = time.time() - last_press_time
 
             if wait_time > LETTER_GAP:
+                try:
+                    if symbols[-1]=="-" and symbols[-2]=="." and symbols[-3]=="-" and symbols[-4]==".":
+                        symbols=""
+                except:
+                    pass
+                print(symbols)
+                print(current_symbol)
                 if current_symbol:
                     translated_text = translate_morse(current_symbol)
                     #print(translated_text)
                 #print("Current Translation:", translated_text)
                     if translated_text=='backspace':
-                        for _ in range(len(current_symbol)+1):
-                            controller.press(pyk.Key.backspace)
-                            controller.release(pyk.Key.backspace)
+                        if symbols=="":
+                            for _ in range(len(current_symbol)):
+                                controller.press(pyk.Key.backspace)
+                                controller.release(pyk.Key.backspace)
+                        else:
+                            for _ in range(len(symbols)):
+                                controller.press(pyk.Key.backspace)
+                                controller.release(pyk.Key.backspace)
+                            symbols=""
                     elif translated_text==' ':
                         for _ in range(len(current_symbol)+1):
                             controller.press(pyk.Key.backspace)
                             controller.release(pyk.Key.backspace)
                         controller.type('/')
                     elif translated_text!='?':
+                        symbols+=" "
                         controller.type(' ')
                     else:
                         for _ in range(len(current_symbol)):
                             controller.press(pyk.Key.backspace)
                             controller.release(pyk.Key.backspace)
+                            symbols=symbols[:-1]
                     current_symbol = ""
                     last_press_time = None
                     #else:
